@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI Personality Assessment & 16 Types Explorer</title>
+  <meta name="description" content="Discover your 16 Myers-Briggs personality type with our free, scientifically calibrated assessment. Complete cognitive profiles, strengths, blindspots, and career matches.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="brand" data-route="home">
+      <div class="brand-icon">🧠</div>
+      <span>TypeVision MBTI</span>
+    </div>
+
+    <div class="nav-links">
+      <span class="nav-link active" id="navHome" data-route="home">Home</span>
+      <span class="nav-link" id="navTest" data-route="test">Take Test</span>
+      <span class="nav-link" id="navTypes" data-route="types">16 Types</span>
+      <button class="btn-icon" id="themeToggleBtn" title="Toggle Dark/Light Mode" aria-label="Toggle theme">🌙</button>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- VIEW 1: HOME / LANDING -->
+    <section id="homeView" class="view-section active">
+      <div class="hero">
+        <div class="hero-pill">
+          <span>✨ 24 Scientifically Calibrated Questions</span>
+        </div>
+        <h1>
+          Discover Your True Self with the <span class="hero-gradient">16 Personalities</span> Test
+        </h1>
+        <p>
+          Uncover your cognitive strengths, natural communication style, career superpowers, and psychological blindspots in under 5 minutes.
+        </p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
+          <button class="btn-primary" id="heroStartBtn">Start Free Test →</button>
+          <button class="btn-secondary" data-route="types">Browse All 16 Types</button>
+        </div>
+      </div>
+
+      <!-- The 4 Cognitive Dichotomies -->
+      <div style="margin-top: 1rem; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; text-align: center; margin-bottom: 1.25rem;">The 4 Core Cognitive Dimensions</h2>
+        <div class="grid-2">
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #3b82f6;"></span>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">Energy: Extraversion (E) vs Introversion (I)</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+              Where you draw and replenish your mental stamina. Extraverts thrive on outer action and social momentum; Introverts recharge in solitary reflection and focused depth.
+            </p>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">Information: Sensing (S) vs Intuition (N)</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+              How you process information. Sensing types focus on concrete, present facts and practical experience; Intuitive types read between the lines, focusing on patterns and future possibilities.
+            </p>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></span>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">Decisions: Thinking (T) vs Feeling (F)</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+              How you weigh dilemmas and make conclusions. Thinkers seek objective logic, rational principles, and fairness; Feelers prioritize empathy, human relationships, and emotional harmony.
+            </p>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #8b5cf6;"></span>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">Lifestyle: Judging (J) vs Perceiving (P)</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+              How you structure your outer world. Judging types favor checklists, definite plans, and decisive closure; Perceiving types prefer flexible spontaneity, improvisation, and open options.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- The 4 Temperament Groups -->
+      <div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; text-align: center; margin-bottom: 1.25rem;">The 4 Personality Temperaments</h2>
+        <div class="grid-4">
+          <div class="card" style="border-top: 4px solid var(--analysts);">
+            <span class="badge-tag" style="background: rgba(139, 92, 246, 0.15); color: var(--analysts); margin-bottom: 0.4rem;">Analysts</span>
+            <h4 style="font-size: 1.1rem; font-weight: 700;">INTJ, INTP, ENTJ, ENTP</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Strategic, intellectual, and driven by logic, systemic efficiency, and boundless curiosity.
+            </p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--diplomats);">
+            <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: var(--diplomats); margin-bottom: 0.4rem;">Diplomats</span>
+            <h4 style="font-size: 1.1rem; font-weight: 700;">INFJ, INFP, ENFJ, ENFP</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Empathetic, authentic, and inspiring humanists dedicated to harmony, values, and community.
+            </p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--sentinels);">
+            <span class="badge-tag" style="background: rgba(59, 130, 246, 0.15); color: var(--sentinels); margin-bottom: 0.4rem;">Sentinels</span>
+            <h4 style="font-size: 1.1rem; font-weight: 700;">ISTJ, ISFJ, ESTJ, ESFJ</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Reliable, dutiful, and organized guardians upholding tradition, stability, and meticulous care.
+            </p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--explorers);">
+            <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--explorers); margin-bottom: 0.4rem;">Explorers</span>
+            <h4 style="font-size: 1.1rem; font-weight: 700;">ISTP, ISFP, ESTP, ESFP</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Spontaneous, tactical, and hands-on masters of the moment who thrive on action and craft.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: INTERACTIVE ASSESSMENT -->
+    <section id="testView" class="view-section">
+      <div class="test-container">
+        
+        <!-- Progress Bar Card -->
+        <div class="card" style="padding: 1rem 1.25rem;">
+          <div class="progress-header">
+            <span id="dimensionBadge" style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; color: var(--primary);">Energy Orientation</span>
+            <span id="progressPercentText">4%</span>
+          </div>
+          <div class="progress-bar-track" style="margin-top: 0.5rem;">
+            <div id="progressBar" class="progress-bar-fill" style="width: 4%;"></div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="card card-elevated" style="padding: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span id="questionNumText" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); background: var(--bg-subtle); padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-color);">
+              Question 1 of 24
+            </span>
+            <span style="font-size: 0.8rem; color: var(--text-subtle);">Use keys 1-5 to answer</span>
+          </div>
+
+          <div class="question-box">
+            <h2 id="questionText" class="question-prompt">
+              Loading question...
+            </h2>
+          </div>
+
+          <!-- 5-Point Likert Options -->
+          <div class="likert-scale">
+            <button class="likert-btn" data-val="1">
+              <span>Strongly Disagree</span>
+              <span class="hotkey">1</span>
+            </button>
+            <button class="likert-btn" data-val="2">
+              <span>Disagree</span>
+              <span class="hotkey">2</span>
+            </button>
+            <button class="likert-btn" data-val="3">
+              <span>Neutral / In Between</span>
+              <span class="hotkey">3</span>
+            </button>
+            <button class="likert-btn" data-val="4">
+              <span>Agree</span>
+              <span class="hotkey">4</span>
+            </button>
+            <button class="likert-btn" data-val="5">
+              <span>Strongly Agree</span>
+              <span class="hotkey">5</span>
+            </button>
+          </div>
+
+          <!-- Bottom Navigation -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <button class="btn-secondary" id="prevBtn" style="padding: 0.5rem 1rem; font-size: 0.88rem;">← Previous</button>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">Auto-advances on click</span>
+            <button class="btn-primary" id="nextBtn" style="padding: 0.5rem 1.25rem; font-size: 0.88rem;">Next →</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 3: COMPREHENSIVE RESULT REPORT -->
+    <section id="resultView" class="view-section">
+      <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.75rem;">
+        
+        <!-- Hero Result Banner -->
+        <div class="result-hero card-elevated">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+            <div>
+              <span class="badge-tag" id="resRoleGroup" style="margin-bottom: 0.5rem;">Analysts</span>
+              <div style="display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap;">
+                <h1 class="type-badge-large" id="resTypeBadge" style="color: var(--primary);">INTJ</h1>
+                <h2 style="font-size: 1.6rem; font-weight: 800;" id="resArchetypeTitle">The Architect</h2>
+              </div>
+              <p style="font-size: 1rem; color: var(--text-muted); font-weight: 500;" id="resNickname">"Strategic, Innovative & Independent"</p>
+            </div>
+
+            <div class="no-print" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn-secondary" id="shareResultBtn" style="font-size: 0.85rem; padding: 0.5rem 0.9rem;">🔗 Share Link</button>
+              <button class="btn-secondary" id="printResultBtn" style="font-size: 0.85rem; padding: 0.5rem 0.9rem;">🖨️ Print / PDF</button>
+              <button class="btn-primary" id="retakeTestBtn" style="font-size: 0.85rem; padding: 0.5rem 0.9rem;">↻ Retake</button>
+            </div>
+          </div>
+
+          <blockquote style="font-size: 0.95rem; font-style: italic; color: var(--text-muted); border-left: 3px solid var(--primary); padding-left: 1rem;" id="resQuote">
+            "Strategic vision and preparation outmatch brute force every time."
+          </blockquote>
+
+          <p style="font-size: 1rem; line-height: 1.6; color: var(--text-main);" id="resSummary">
+            Detailed profile overview loading...
+          </p>
+
+          <!-- 4 Dimension Trait Percentage Bars -->
+          <div style="margin-top: 0.75rem;">
+            <h3 style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">Your Dimension Breakdown</h3>
+            <div class="grid-2">
+              <div class="trait-card" id="barEI"></div>
+              <div class="trait-card" id="barSN"></div>
+              <div class="trait-card" id="barTF"></div>
+              <div class="trait-card" id="barJP"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strengths & Blindspots -->
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #10b981; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+              <span>✨</span> Core Strengths & Superpowers
+            </h3>
+            <ul id="resStrengthsList" style="font-size: 0.9rem; color: var(--text-muted); padding-left: 1.25rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.4rem;">
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #f59e0b; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+              <span>⚠️</span> Potential Blindspots & Pitfalls
+            </h3>
+            <ul id="resBlindspotsList" style="font-size: 0.9rem; color: var(--text-muted); padding-left: 1.25rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.4rem;">
+            </ul>
+          </div>
+        </div>
+
+        <!-- Careers & Workplace Style -->
+        <div class="card">
+          <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #3b82f6; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+            <span>💼</span> Work Style & Career Matches
+          </h3>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.75rem;" id="resWorkStyle">
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;" id="resCareerTags"></div>
+        </div>
+
+        <!-- Relationships, Notable People & Cognitive Stack -->
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #ec4899; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+              <span>❤️</span> Relationship Dynamics
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Natural synergies and high compatibility:
+            </p>
+            <p style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);" id="resCompatibility"></p>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #8b5cf6; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+              <span>🎭</span> Notable Figures & Characters
+            </h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;" id="resNotableTags"></div>
+          </div>
+        </div>
+
+        <!-- Cognitive Functions Stack -->
+        <div class="card">
+          <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Jungian Cognitive Function Stack
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.75rem;" id="resCognitiveStack">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 4: 16 TYPES DIRECTORY -->
+    <section id="typesView" class="view-section">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 800;">The 16 Personality Types</h2>
+        <p style="color: var(--text-muted); max-width: 580px; margin: 0.5rem auto 1.5rem;">
+          Explore all Myers-Briggs archetypes, filtered by role group or searched by keyword. Click any card to view their complete profile.
+        </p>
+
+        <!-- Search & Filter Controls -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+          <input type="text" id="typeSearchInput" placeholder="Search by type (e.g. INFJ, Commander, Artist)..." style="width: 100%; max-width: 440px; padding: 0.65rem 1rem; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main); font-size: 0.92rem; outline: none;">
+
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center;">
+            <button class="btn-secondary type-filter-btn active" data-filter="all" style="padding: 0.35rem 0.8rem; font-size: 0.82rem;">All (16)</button>
+            <button class="btn-secondary type-filter-btn" data-filter="analysts" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; border-color: rgba(139, 92, 246, 0.4);">Analysts</button>
+            <button class="btn-secondary type-filter-btn" data-filter="diplomats" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; border-color: rgba(16, 185, 129, 0.4);">Diplomats</button>
+            <button class="btn-secondary type-filter-btn" data-filter="sentinels" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; border-color: rgba(59, 130, 246, 0.4);">Sentinels</button>
+            <button class="btn-secondary type-filter-btn" data-filter="explorers" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; border-color: rgba(245, 158, 11, 0.4);">Explorers</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Types Grid -->
+      <div class="grid-4" id="typesGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- TYPE DETAIL MODAL -->
+  <div class="modal-overlay" id="typeModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 TypeVision MBTI Assessment. Built for deep self-discovery and personal growth.</p>
+    <p style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 0.35rem;">
+      Myers-Briggs Type Indicator and MBTI are registered trademarks of The Myers & Briggs Foundation. This tool provides an educational assessment based on Jungian typology.
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
