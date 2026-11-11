@@ -401,23 +401,26 @@ body {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 14px;
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  box-shadow: var(--card-shadow);
 }
 
 .trait-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  align-items: center;
+  font-size: 0.88rem;
   font-weight: 600;
 }
 
 .trait-bar-track {
   width: 100%;
-  height: 10px;
-  background: var(--border-color);
+  height: 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
   border-radius: 999px;
   overflow: hidden;
   display: flex;
@@ -425,14 +428,87 @@ body {
 
 .trait-bar-fill-left {
   height: 100%;
-  background: var(--primary);
-  transition: width 0.6s ease;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trait-bar-fill-right {
   height: 100%;
-  background: #3b82f6;
-  transition: width 0.6s ease;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 4 Personality Trait Pillar Cards */
+.four-trait-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.four-trait-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-lg);
+}
+
+.four-trait-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--card-accent, var(--primary));
+}
+
+.four-trait-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.four-trait-letter {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--card-accent, var(--primary));
+  line-height: 1;
+}
+
+.four-trait-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.four-trait-dimension {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--text-subtle);
+}
+
+.four-trait-pct {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--primary-subtle);
+  color: var(--primary);
+  width: fit-content;
+}
+
+.four-trait-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-top: 0.2rem;
 }
 
 /* 16 Types Grid Directory */
