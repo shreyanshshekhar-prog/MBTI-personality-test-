@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MBTI Personality Assessment & 16 Types Explorer</title>
+  <title>TypeVision — 16 Personality MBTI Assessment</title>
   <meta name="description" content="Discover your 16 Myers-Briggs personality type with our free, scientifically calibrated assessment. Complete cognitive profiles, strengths, blindspots, and career matches.">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -19,6 +19,7 @@
     <div class="nav-links">
       <span class="nav-link active" id="navHome" data-route="home">Home</span>
       <span class="nav-link" id="navTest" data-route="test">Take Test</span>
+      <span class="nav-link" id="navResult" data-route="result" style="display: none;">My Result</span>
       <span class="nav-link" id="navTypes" data-route="types">16 Types</span>
       <button class="btn-icon" id="themeToggleBtn" title="Toggle Dark/Light Mode" aria-label="Toggle theme">🌙</button>
     </div>
@@ -40,6 +41,7 @@
         </p>
         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
           <button class="btn-primary" id="heroStartBtn">Start Free Test →</button>
+          <button class="btn-secondary" id="heroSavedResultBtn" style="display: none;">View My Result 📊</button>
           <button class="btn-secondary" data-route="types">Browse All 16 Types</button>
         </div>
       </div>
@@ -51,7 +53,7 @@
           <div class="card">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: #3b82f6;"></span>
-              <h3 style="font-size: 1.05rem; font-weight: 700;">Energy: Extraversion (E) vs Introversion (I)</h3>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">1. Energy: Extraversion (E) vs Introversion (I)</h3>
             </div>
             <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
               Where you draw and replenish your mental stamina. Extraverts thrive on outer action and social momentum; Introverts recharge in solitary reflection and focused depth.
@@ -61,7 +63,7 @@
           <div class="card">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
-              <h3 style="font-size: 1.05rem; font-weight: 700;">Information: Sensing (S) vs Intuition (N)</h3>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">2. Information: Sensing (S) vs Intuition (N)</h3>
             </div>
             <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
               How you process information. Sensing types focus on concrete, present facts and practical experience; Intuitive types read between the lines, focusing on patterns and future possibilities.
@@ -71,7 +73,7 @@
           <div class="card">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></span>
-              <h3 style="font-size: 1.05rem; font-weight: 700;">Decisions: Thinking (T) vs Feeling (F)</h3>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">3. Decisions: Thinking (T) vs Feeling (F)</h3>
             </div>
             <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
               How you weigh dilemmas and make conclusions. Thinkers seek objective logic, rational principles, and fairness; Feelers prioritize empathy, human relationships, and emotional harmony.
@@ -81,7 +83,7 @@
           <div class="card">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: #8b5cf6;"></span>
-              <h3 style="font-size: 1.05rem; font-weight: 700;">Lifestyle: Judging (J) vs Perceiving (P)</h3>
+              <h3 style="font-size: 1.05rem; font-weight: 700;">4. Lifestyle: Judging (J) vs Perceiving (P)</h3>
             </div>
             <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
               How you structure your outer world. Judging types favor checklists, definite plans, and decisive closure; Perceiving types prefer flexible spontaneity, improvisation, and open options.
@@ -137,7 +139,10 @@
         <div class="card" style="padding: 1rem 1.25rem;">
           <div class="progress-header">
             <span id="dimensionBadge" style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; color: var(--primary);">Energy Orientation</span>
-            <span id="progressPercentText">4%</span>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <button id="quickCalculateBtn" class="btn-secondary" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;" title="Calculate results based on current answers">View Results Now ⚡</button>
+              <span id="progressPercentText" style="font-weight: 700; color: var(--primary);">4%</span>
+            </div>
           </div>
           <div class="progress-bar-track" style="margin-top: 0.5rem;">
             <div id="progressBar" class="progress-bar-fill" style="width: 4%;"></div>
@@ -150,7 +155,7 @@
             <span id="questionNumText" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); background: var(--bg-subtle); padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-color);">
               Question 1 of 24
             </span>
-            <span style="font-size: 0.8rem; color: var(--text-subtle);">Use keys 1-5 to answer</span>
+            <span style="font-size: 0.8rem; color: var(--text-subtle);">Press keys 1–5 to answer</span>
           </div>
 
           <div class="question-box">
@@ -225,9 +230,25 @@
             Detailed profile overview loading...
           </p>
 
+          <!-- The 4 Personality Letters Breakdown Cards -->
+          <div style="margin-top: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem;">
+              <h3 style="font-size: 0.88rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+                Your 4 Personality Trait Dimensions
+              </h3>
+              <span style="font-size: 0.78rem; color: var(--text-subtle);">4 cognitive preferences</span>
+            </div>
+            
+            <div class="grid-4" id="resFourLettersGrid">
+              <!-- Dynamically populated with 4 trait cards -->
+            </div>
+          </div>
+
           <!-- 4 Dimension Trait Percentage Bars -->
           <div style="margin-top: 0.75rem;">
-            <h3 style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">Your Dimension Breakdown</h3>
+            <h3 style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Dimension Balance & Percentage Breakdown
+            </h3>
             <div class="grid-2">
               <div class="trait-card" id="barEI"></div>
               <div class="trait-card" id="barSN"></div>
