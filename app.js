@@ -1,4 +1,4 @@
-// MBTI Personality Application Logic
+// TypeVision MBTI Application Logic
 document.addEventListener('DOMContentLoaded', () => {
   // App State
   const state = {
@@ -9,12 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     activeFilter: 'all'
   };
 
+  // Trait metadata for the 4 letters
+  const TRAIT_INFO = {
+    E: { name: "Extraversion", axis: "Energy", opp: "Introversion", oppKey: "I", color: "#3b82f6", desc: "Draws stamina from the external world, action, social engagement, and expressive interaction." },
+    I: { name: "Introversion", axis: "Energy", opp: "Extraversion", oppKey: "E", color: "#3b82f6", desc: "Draws stamina from inner reflection, quiet solitude, depth of focus, and independent thought." },
+    S: { name: "Sensing", axis: "Information", opp: "Intuition", oppKey: "N", color: "#10b981", desc: "Processes concrete, observable realities, practical details, and battle-tested methods." },
+    N: { name: "Intuition", axis: "Information", opp: "Sensing", oppKey: "S", color: "#10b981", desc: "Processes patterns, abstract metaphors, overarching big-picture visions, and future possibilities." },
+    T: { name: "Thinking", axis: "Decisions", opp: "Feeling", oppKey: "F", color: "#f59e0b", desc: "Prioritizes objective logic, impartial principles, consistency, and rational clarity." },
+    F: { name: "Feeling", axis: "Decisions", opp: "Thinking", oppKey: "T", color: "#f59e0b", desc: "Prioritizes empathy, interpersonal harmony, emotional nuance, and core human values." },
+    J: { name: "Judging", axis: "Lifestyle", opp: "Perceiving", oppKey: "P", color: "#8b5cf6", desc: "Prefers structure, checklists, clear deadlines, closure, and planned organization." },
+    P: { name: "Perceiving", axis: "Lifestyle", opp: "Judging", oppKey: "J", color: "#8b5cf6", desc: "Prefers flexibility, open options, spontaneous adaptation, and bursts of inspired energy." }
+  };
+
   // DOM Elements
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const navHome = document.getElementById('navHome');
   const navTest = document.getElementById('navTest');
+  const navResult = document.getElementById('navResult');
   const navTypes = document.getElementById('navTypes');
   const heroStartBtn = document.getElementById('heroStartBtn');
+  const heroSavedResultBtn = document.getElementById('heroSavedResultBtn');
 
   const homeView = document.getElementById('homeView');
   const testView = document.getElementById('testView');
@@ -29,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressPercentText = document.getElementById('progressPercentText');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
+  const quickCalculateBtn = document.getElementById('quickCalculateBtn');
   const likertButtons = document.querySelectorAll('.likert-btn');
 
   // Modal Elements
@@ -50,54 +65,105 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggleBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
   }
 
-  // View Navigation Router
-  function showView(viewId) {
-    [homeView, testView, resultView, typesView].forEach(v => {
-      if (v) v.classList.remove('active');
-    });
+  // Check for Saved Results
+  const savedResultJSON = localStorage.getItem('mbti_latest_result');
+  if (savedResultJSON) {
+    try {
+      state.currentResult = JSON.parse(savedResultJSON);
+      if (state.currentResult && state.currentResult.type) {
+        showResultNavButtons(state.currentResult.type);
+      }
+    } catch (e) {
+      console.warn("Could not parse saved result:", e);
+    }
+  }
 
-    [navHome, navTest, navTypes].forEach(n => {
-      if (n) n.classList.remove('active');
-    });
+  function showResultNavButtons(typeCode) {
+    if (navResult) {
+      navResult.style.display = 'inline-block';
+      navResult.textContent = `Result (${typeCode})`;
+    }
+    if (heroSavedResultBtn) {
+      heroSavedResultBtn.style.display = 'inline-flex';
+      heroSavedResultBtn.textContent = `View Saved Result (${typeCode}) 📊`;
+    }
+  }
+
+  // View Navigation Router (Safe from hash loops)
+  function showView(viewId, updateHash = true) {
+    const views = [homeView, testView, resultView, typesView];
+    const navs = [navHome, navTest, navResult, navTypes];
+
+    views.forEach(v => { if (v) v.classList.remove('active'); });
+    navs.forEach(n => { if (n) n.classList.remove('active'); });
 
     if (viewId === 'home') {
       homeView.classList.add('active');
       navHome.classList.add('active');
-      window.location.hash = 'home';
+      if (updateHash) history.replaceState(null, '', '#home');
     } else if (viewId === 'test') {
       testView.classList.add('active');
       navTest.classList.add('active');
       renderQuestion();
-      window.location.hash = 'test';
+      if (updateHash) history.replaceState(null, '', '#test');
     } else if (viewId === 'result') {
       resultView.classList.add('active');
-      if (state.currentResult) {
-        window.location.hash = `result=${state.currentResult.type}`;
+      if (navResult) navResult.classList.add('active');
+      if (state.currentResult && updateHash) {
+        history.replaceState(null, '', `#result=${state.currentResult.type}`);
       }
     } else if (viewId === 'types') {
       typesView.classList.add('active');
       navTypes.classList.add('active');
       renderTypesDirectory();
-      window.location.hash = 'types';
+      if (updateHash) history.replaceState(null, '', '#types');
     }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Navigation Event Listeners
   navHome.addEventListener('click', () => showView('home'));
   navTest.addEventListener('click', () => showView('test'));
+  if (navResult) {
+    navResult.addEventListener('click', () => {
+      if (state.currentResult) {
+        renderResultUI(state.currentResult);
+        showView('result');
+      } else {
+        calculateAndDisplayResults();
+      }
+    });
+  }
   navTypes.addEventListener('click', () => showView('types'));
   if (heroStartBtn) heroStartBtn.addEventListener('click', () => showView('test'));
+  if (heroSavedResultBtn) {
+    heroSavedResultBtn.addEventListener('click', () => {
+      if (state.currentResult) {
+        renderResultUI(state.currentResult);
+        showView('result');
+      }
+    });
+  }
 
   document.querySelectorAll('[data-route]').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       const route = el.getAttribute('data-route');
-      showView(route);
+      if (route === 'result') {
+        if (state.currentResult) {
+          renderResultUI(state.currentResult);
+          showView('result');
+        } else {
+          calculateAndDisplayResults();
+        }
+      } else {
+        showView(route);
+      }
     });
   });
 
-  // Restore Saved Progress from LocalStorage
+  // Restore Saved Question Progress from LocalStorage
   const savedAnswers = localStorage.getItem('mbti_saved_answers');
   if (savedAnswers) {
     try {
@@ -108,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.currentIndex = firstUnanswered !== -1 ? firstUnanswered : 0;
       }
     } catch (e) {
-      console.error(e);
+      console.warn("Could not restore saved answers:", e);
     }
   }
 
@@ -184,6 +250,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  if (quickCalculateBtn) {
+    quickCalculateBtn.addEventListener('click', () => {
+      calculateAndDisplayResults();
+    });
+  }
+
   // Keyboard Shortcuts (1-5, Arrow Keys)
   window.addEventListener('keydown', (e) => {
     if (!testView.classList.contains('active')) return;
@@ -206,6 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // Generate Profile Result from 4-letter code
+  function generateProfileResult(code) {
+    const mbti = code.toUpperCase();
+    const profile = MBTI_DATA.profiles[mbti] || MBTI_DATA.profiles["INTJ"];
+    return {
+      type: mbti,
+      profile: profile,
+      breakdown: {
+        EI: { lead: mbti[0], pct: 72 },
+        SN: { lead: mbti[1], pct: 68 },
+        TF: { lead: mbti[2], pct: 76 },
+        JP: { lead: mbti[3], pct: 65 }
+      }
+    };
+  }
 
   // Score Calculation
   function calculateAndDisplayResults() {
@@ -234,11 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const mbti = `${l1}${l2}${l3}${l4}`;
     const profile = MBTI_DATA.profiles[mbti] || MBTI_DATA.profiles["INTJ"];
 
-    // Normalized Percentages (52% to 98%)
+    // Normalized Percentages (54% to 96%)
     const getPct = (lead, other) => {
       const diff = Math.max(0, scores[lead] - scores[other]);
       const raw = 50 + Math.round((diff / 24) * 50);
-      return Math.min(98, Math.max(52, raw));
+      return Math.min(96, Math.max(54, raw));
     };
 
     const pctEI = getPct(l1, l1 === "E" ? "I" : "E");
@@ -257,29 +345,65 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
+    // Save to LocalStorage
+    try {
+      localStorage.setItem('mbti_latest_result', JSON.stringify(state.currentResult));
+    } catch (e) {
+      console.warn("Storage quota:", e);
+    }
+
+    showResultNavButtons(mbti);
     renderResultUI(state.currentResult);
     showView('result');
   }
 
   // Render Result UI
   function renderResultUI(res) {
+    if (!res || !res.profile) return;
     const { type, profile, breakdown } = res;
     const groupInfo = MBTI_DATA.groups[profile.group];
 
+    // Hero Type Banner
     document.getElementById('resTypeBadge').textContent = type;
     document.getElementById('resArchetypeTitle').textContent = profile.archetype;
     document.getElementById('resNickname').textContent = `"${profile.nickname}"`;
     document.getElementById('resRoleGroup').textContent = groupInfo.name;
-    document.getElementById('resRoleGroup').style.backgroundColor = `${groupInfo.color}20`;
+    document.getElementById('resRoleGroup').style.backgroundColor = `${groupInfo.color}25`;
     document.getElementById('resRoleGroup').style.color = groupInfo.color;
     document.getElementById('resQuote').textContent = `“${profile.quote}”`;
     document.getElementById('resSummary').textContent = profile.summary;
 
-    // Breakdown Bars
-    renderTraitBar('barEI', 'Extraversion', 'Introversion', breakdown.EI.lead === 'E', breakdown.EI.pct);
-    renderTraitBar('barSN', 'Sensing', 'Intuition', breakdown.SN.lead === 'S', breakdown.SN.pct);
-    renderTraitBar('barTF', 'Thinking', 'Feeling', breakdown.TF.lead === 'T', breakdown.TF.pct);
-    renderTraitBar('barJP', 'Judging', 'Perceiving', breakdown.JP.lead === 'J', breakdown.JP.pct);
+    // The 4 Personality Letters Breakdown Cards Grid
+    const fourLettersGrid = document.getElementById('resFourLettersGrid');
+    if (fourLettersGrid) {
+      const letters = [
+        { code: breakdown.EI.lead, pct: breakdown.EI.pct, axis: "Energy" },
+        { code: breakdown.SN.lead, pct: breakdown.SN.pct, axis: "Information" },
+        { code: breakdown.TF.lead, pct: breakdown.TF.pct, axis: "Decisions" },
+        { code: breakdown.JP.lead, pct: breakdown.JP.pct, axis: "Lifestyle" }
+      ];
+
+      fourLettersGrid.innerHTML = letters.map(item => {
+        const info = TRAIT_INFO[item.code] || { name: item.code, color: "var(--primary)", desc: "" };
+        return `
+          <div class="four-trait-card" style="--card-accent: ${info.color};">
+            <div class="four-trait-header">
+              <span class="four-trait-letter">${item.code}</span>
+              <span class="four-trait-pct" style="background: ${info.color}15; color: ${info.color};">${item.pct}% Dominant</span>
+            </div>
+            <div class="four-trait-dimension">${item.axis}</div>
+            <div class="four-trait-title">${info.name}</div>
+            <div class="four-trait-desc">${info.desc}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4 Dimension Balance Bars
+    renderTraitBar('barEI', 'Extraversion (E)', 'Introversion (I)', breakdown.EI.lead === 'E', breakdown.EI.pct, '#3b82f6');
+    renderTraitBar('barSN', 'Sensing (S)', 'Intuition (N)', breakdown.SN.lead === 'S', breakdown.SN.pct, '#10b981');
+    renderTraitBar('barTF', 'Thinking (T)', 'Feeling (F)', breakdown.TF.lead === 'T', breakdown.TF.pct, '#f59e0b');
+    renderTraitBar('barJP', 'Judging (J)', 'Perceiving (P)', breakdown.JP.lead === 'J', breakdown.JP.pct, '#8b5cf6');
 
     // Strengths & Blindspots
     const strengthsList = document.getElementById('resStrengthsList');
@@ -316,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderTraitBar(containerId, leftLabel, rightLabel, isLeftDominant, pct) {
+  function renderTraitBar(containerId, leftLabel, rightLabel, isLeftDominant, pct, accentColor) {
     const el = document.getElementById(containerId);
     if (!el) return;
 
@@ -325,16 +449,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     el.innerHTML = `
       <div class="trait-labels">
-        <span style="${isLeftDominant ? 'color: var(--primary); font-weight: 700;' : 'color: var(--text-muted);'}">
-          ${leftLabel} (${leftPct}%)
+        <span style="${isLeftDominant ? `color: ${accentColor}; font-weight: 800;` : 'color: var(--text-muted);'}">
+          ${isLeftDominant ? '★ ' : ''}${leftLabel} (${leftPct}%)
         </span>
-        <span style="${!isLeftDominant ? 'color: var(--primary); font-weight: 700;' : 'color: var(--text-muted);'}">
-          ${rightLabel} (${rightPct}%)
+        <span style="${!isLeftDominant ? `color: ${accentColor}; font-weight: 800;` : 'color: var(--text-muted);'}">
+          ${!isLeftDominant ? '★ ' : ''}${rightLabel} (${rightPct}%)
         </span>
       </div>
       <div class="trait-bar-track">
-        <div class="trait-bar-fill-left" style="width: ${leftPct}%;"></div>
-        <div class="trait-bar-fill-right" style="width: ${rightPct}%;"></div>
+        <div class="trait-bar-fill-left" style="width: ${leftPct}%; background: ${isLeftDominant ? accentColor : 'var(--border-color)'};"></div>
+        <div class="trait-bar-fill-right" style="width: ${rightPct}%; background: ${!isLeftDominant ? accentColor : 'var(--border-color)'};"></div>
       </div>
     `;
   }
@@ -343,11 +467,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareBtn = document.getElementById('shareResultBtn');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
-      const url = `${window.location.origin}${window.location.pathname}#type=${state.currentResult.type}`;
+      const typeCode = state.currentResult ? state.currentResult.type : 'INTJ';
+      const url = `${window.location.origin}${window.location.pathname}#result=${typeCode}`;
       navigator.clipboard.writeText(url).then(() => {
         const orig = shareBtn.innerHTML;
         shareBtn.innerHTML = '✓ Link Copied!';
         setTimeout(() => { shareBtn.innerHTML = orig; }, 2000);
+      }).catch(() => {
+        prompt("Copy this link to share your MBTI result:", url);
       });
     });
   }
@@ -362,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const retakeBtn = document.getElementById('retakeTestBtn');
   if (retakeBtn) {
     retakeBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to restart the assessment?")) {
+      if (confirm("Would you like to restart the test from question 1?")) {
         state.answers.fill(null);
         state.currentIndex = 0;
         localStorage.removeItem('mbti_saved_answers');
@@ -476,29 +603,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // URL Hash Routing on Load
   function handleHash() {
-    const hash = window.location.hash.replace('#', '');
-    if (hash === 'test') {
-      showView('test');
+    const hash = window.location.hash.replace(/^#/, '');
+    if (!hash || hash === 'home') {
+      showView('home', false);
+    } else if (hash === 'test') {
+      showView('test', false);
     } else if (hash === 'types') {
-      showView('types');
-    } else if (hash.startsWith('type=')) {
+      showView('types', false);
+    } else if (hash.startsWith('result=') || hash.startsWith('type=')) {
       const targetType = hash.split('=')[1].toUpperCase();
       if (MBTI_DATA.profiles[targetType]) {
-        state.currentResult = {
-          type: targetType,
-          profile: MBTI_DATA.profiles[targetType],
-          breakdown: {
-            EI: { lead: targetType[0], pct: 70 },
-            SN: { lead: targetType[1], pct: 68 },
-            TF: { lead: targetType[2], pct: 74 },
-            JP: { lead: targetType[3], pct: 65 }
-          }
-        };
+        state.currentResult = generateProfileResult(targetType);
+        showResultNavButtons(targetType);
         renderResultUI(state.currentResult);
-        showView('result');
+        showView('result', false);
+      } else {
+        showView('home', false);
+      }
+    } else if (hash === 'result') {
+      if (state.currentResult) {
+        renderResultUI(state.currentResult);
+        showView('result', false);
+      } else {
+        calculateAndDisplayResults();
       }
     } else {
-      showView('home');
+      showView('home', false);
     }
   }
 
